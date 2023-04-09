@@ -1131,21 +1131,21 @@ if [[ -s "${PROJECT_DIR}"/.github_token ]]; then
 	fi
 	curl -s -X PUT -H "Authorization: token ${GITHUB_TOKEN}" -H "Accept: application/vnd.github.mercy-preview+json" -d '{ "names": ["'"${platform}"'","'"${manufacturer}"'","'"${top_codename}"'","firmware","dump"]}' "https://api.github.com/repos/${GIT_ORG}/${repo}/topics" 	# Update Repository Topics
 	git remote add origin https://github.com/${GIT_ORG}/${repo}.git
-	git commit -asm "Add ${description}"
+	git commit -asm "Import ${description}"
 	{ [[ $(du -bs .) -lt 1288490188 ]] && git push https://${GITHUB_TOKEN}@github.com/${GIT_ORG}/${repo}.git "${branch}"; } || (
 		git update-ref -d HEAD
 		git reset system/ vendor/
 		git checkout -b "${branch}" || { git checkout -b "${incremental}" && export branch="${incremental}"; }
-		git commit -asm "Add extras for ${description}"
+		git commit -asm "Import extras for ${description}"
 		git push https://${GITHUB_TOKEN}@github.com/${GIT_ORG}/${repo}.git "${branch}"
 		git add vendor/
-		git commit -asm "Add vendor for ${description}"
+		git commit -asm "Import vendor for ${description}"
 		git push https://${GITHUB_TOKEN}@github.com/${GIT_ORG}/${repo}.git "${branch}"
 		git add system/system/app/ system/system/priv-app/ || git add system/app/ system/priv-app/
-		git commit -asm "Add apps for ${description}"
+		git commit -asm "Import apps for ${description}"
 		git push https://${GITHUB_TOKEN}@github.com/${GIT_ORG}/${repo}.git "${branch}"
 		git add system/
-		git commit -asm "Add system for ${description}"
+		git commit -asm "Import system for ${description}"
 		git push https://${GITHUB_TOKEN}@github.com/${GIT_ORG}/${repo}.git "${branch}"
 	)
 	# Telegram channel post
@@ -1154,7 +1154,7 @@ if [[ -s "${PROJECT_DIR}"/.github_token ]]; then
 		if [[ -s "${PROJECT_DIR}"/.tg_chat ]]; then		# TG Channel ID
 			CHAT_ID=$(< "${PROJECT_DIR}"/.tg_chat)
 		else
-			CHAT_ID="@DumprXDumps"
+			CHAT_ID=" "
 		fi
 		printf "Sending telegram notification...\n"
 		printf "<b>Brand: %s</b>" "${brand}" >| "${OUTDIR}"/tg.html
@@ -1201,8 +1201,8 @@ elif [[ -s "${PROJECT_DIR}"/.gitlab_token ]]; then
 	git checkout -b "${branch}" || { git checkout -b "${incremental}" && export branch="${incremental}"; }
 	find . \( -name "*sensetime*" -o -name "*.lic" \) | cut -d'/' -f'2-' >| .gitignore
 	[[ ! -s .gitignore ]] && rm .gitignore
-	[[ -z "$(git config --get user.email)" ]] && git config user.email "guptasushrut@gmail.com"
-	[[ -z "$(git config --get user.name)" ]] && git config user.name "Sushrut1101"
+	[[ -z "$(git config --get user.email)" ]] && git config user.email "neebexd@gmail.com"
+	[[ -z "$(git config --get user.name)" ]] && git config user.name "Neebe3289"
 	git add --all
 
 	# Create Subgroup
@@ -1256,7 +1256,7 @@ elif [[ -s "${PROJECT_DIR}"/.gitlab_token ]]; then
 	# Pushing via HTTPS doesn't work on GitLab for Large Repos (it's an issue with gitlab for large repos)
 	# NOTE: Your SSH Keys Needs to be Added to your Gitlab Instance
 	git remote add origin git@${GITLAB_INSTANCE}:${GIT_ORG}/${repo}.git
-	git commit -asm "Add ${description}"
+	git commit -asm "Import ${description}"
 
 	# Ensure that the target repo is public
 	curl --request PUT --header "PRIVATE-TOKEN: ${GITLAB_TOKEN}" --url ''"${GITLAB_HOST}"'/api/v4/projects/'"${PROJECT_ID}"'' --data "visibility=public"
@@ -1284,7 +1284,7 @@ elif [[ -s "${PROJECT_DIR}"/.gitlab_token ]]; then
 		if [[ -s "${PROJECT_DIR}"/.tg_chat ]]; then		# TG Channel ID
 			CHAT_ID=$(< "${PROJECT_DIR}"/.tg_chat)
 		else
-			CHAT_ID="@DumprXDumps"
+			CHAT_ID=""
 		fi
 		printf "Sending telegram notification...\n"
 		printf "<b>Brand: %s</b>" "${brand}" >| "${OUTDIR}"/tg.html
